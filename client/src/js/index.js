@@ -1,6 +1,6 @@
 import { Workbox } from 'workbox-window';
 import Editor from './editor';
-import './database';
+import { getDb, putDb } from './database'; // Import getDb and putDb
 import '../css/style.css';
 
 const main = document.querySelector('#main');
@@ -19,13 +19,25 @@ const loadSpinner = () => {
 
 const editor = new Editor();
 
-if (typeof editor === 'undefined') {
-  loadSpinner();
-}
+// Load stored data from IndexedDB when the app starts
+window.addEventListener('load', async () => {
+  const storedContent = await getDb();
+  if (editor && storedContent) {
+    editor.setText(storedContent); // Set the editor's text to the stored content
+  } else {
+    loadSpinner();
+  }
+});
+
+// Save data to IndexedDB when the window is unfocused
+window.addEventListener('blur', async () => {
+  const content = editor.getText(); // Assuming the Editor class has a method to get text
+  await putDb(content);
+});
 
 // Check if service workers are supported
 if ('serviceWorker' in navigator) {
-  // register workbox service worker
+  // Register workbox service worker
   const workboxSW = new Workbox('/src-sw.js');
   workboxSW.register();
 } else {
