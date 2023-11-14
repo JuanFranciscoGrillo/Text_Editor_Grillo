@@ -15,22 +15,43 @@ module.exports = () => {
       path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
-      // ... (Any existing plugins you have should be listed here)
+      new HtmlWebpackPlugin({
+        template: './src/index.html',
+        title: 'Text_Editor_Grillo'
+      }),
+      new WebpackPwaManifest({
+        name: 'Text_Editor_Grillo',
+        short_name: 'Grillo19',
+        description: 'PWA Text Editor',
+        background_color: '#ffffff',
+        theme_color: '#ffffff',
+        crossorigin: 'use-credentials',
+        icons: [
+          {
+            src: path.resolve('src/images/logo.png'),
+            sizes: [96, 128, 192, 256, 384, 512],
+            destination: path.join('assets', 'icons'),
+          },
+        ],
+      }),
+      new InjectManifest({
+        swSrc: './src/src-sw.js',
+        swDest: 'service-worker.js',
+      }),
     ],
     module: {
       rules: [
-        // Babel loader configuration
         {
-          test: /\.js$/, // This will match all .js files
-          exclude: /node_modules/, // Excludes the node_modules directory
+          test: /\.js$/,
+          exclude: /node_modules/,
           use: {
-            loader: 'babel-loader', // Specifies babel-loader
+            loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env'], // Use the preset-env Babel preset
+              presets: ['@babel/preset-env'],
             },
           },
         },
-        // ... (Add any other existing rules here)
+        // ... CSS rules if needed ...
       ],
     },
   };
