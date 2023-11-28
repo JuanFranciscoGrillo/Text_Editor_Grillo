@@ -16,7 +16,7 @@ module.exports = () => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: './src/index.html',
+        template: './src/index.html', // Path to your index.html
         title: 'Text_Editor_Grillo'
       }),
       new WebpackPwaManifest({
@@ -35,7 +35,7 @@ module.exports = () => {
         ],
       }),
       new InjectManifest({
-        swSrc: './src/src-sw.js',
+        swSrc: './src/src-sw.js', // Ensure this path is correct
         swDest: 'service-worker.js',
       }),
     ],
@@ -51,7 +51,12 @@ module.exports = () => {
             },
           },
         },
-        // ... CSS rules if needed ...
+        // Add CSS rules
+        {
+          test: /\.css$/,
+          use: ['style-loader', 'css-loader'],
+        },
+        // ... other rules if needed ...
       ],
     },
   };
